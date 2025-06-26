@@ -1,8 +1,8 @@
 ---
 title: "Generate Conversation Summary Report"
 description: "Create a comprehensive report from existing conversation analysis summaries"
-version: "1.0"
-author: "Claude Code Poster Pipeline"
+version: "2.0"
+author: "Claude Code Generic Pipeline"
 ---
 
 # Generate Conversation Summary Report
@@ -20,105 +20,128 @@ Read all existing summary files and create a master report highlighting:
 
 ## Process
 
-### 1. Read All Summary Files
+### 1. Discover and Read All Summary Files
 ```bash
-# List all summary files
-!find . -name "summary_*.md" -type f
+# Find all summary files in current directory and subdirectories
+find . -name "summary_*.md" -type f
+
+# Alternative: if summaries are in a specific subdirectory
+find ./summaries -name "*.md" -type f 2>/dev/null || find . -name "*summary*.md" -type f
 ```
 
-Read each summary file:
-@summary_finchat.md
-@summary_ml-agent.md  
-@summary_script-parser.md
-@summary_ai-trader-frontend.md
-@summary_airflow-manager.md
-@summary_maven-launchpad.md
-@summary_all-remaining-projects.md
+Dynamically read each discovered summary file based on the actual files found.
 
 ### 2. Analyze Cross-Project Patterns
 
-Identify common themes across projects:
-- **Tool Usage Patterns:** Which Claude Code tools were used most effectively?
-- **Problem-Solving Approaches:** What types of challenges did Claude Code excel at?
-- **Development Workflows:** How did Claude Code integrate into development processes?
-- **Value Creation:** What types of value were consistently delivered?
+Identify common themes across all discovered projects:
+- **Tool Usage Patterns:** Which Claude Code tools were used most effectively across projects?
+- **Problem-Solving Approaches:** What types of challenges did Claude Code consistently excel at?
+- **Development Workflows:** How did Claude Code integrate into various development processes?
+- **Value Creation:** What types of value were consistently delivered across different domains?
 
 ### 3. Quantify Impact
 
-Calculate aggregate impact:
-- **Time Savings:** Estimate total hours saved across all projects
-- **Quality Improvements:** Document enhanced code quality, reliability, etc.
+Calculate aggregate impact from all analyzed projects:
+- **Time Savings:** Estimate total hours saved across all discovered projects
+- **Quality Improvements:** Document enhanced code quality, reliability, and maintainability
 - **Professional Growth:** Skills developed and workflows optimized
-- **Business Value:** Revenue impact, cost savings, productivity gains
+- **Business Value:** Revenue impact, cost savings, and productivity gains
 
 ### 4. Generate Master Report
 
-Create a comprehensive report with sections:
+Create a comprehensive report with adaptive sections based on discovered content:
 
 ```markdown
 # Claude Code Impact Analysis: Complete Portfolio Review
 
 ## Executive Summary
-[2-3 paragraph overview of total impact]
+[2-3 paragraph overview of total impact across all analyzed projects]
 
 ## Project Portfolio Overview
-[Summary statistics: X projects, Y conversations, Z hours saved]
+[Dynamic summary statistics: X projects analyzed, Y total conversations, Z estimated hours saved]
 
 ## Key Success Patterns
 ### Most Valuable Capabilities
-1. [Capability 1]: [Evidence and examples]
-2. [Capability 2]: [Evidence and examples]
+[Ranked list based on frequency and impact across all projects]
+1. [Most frequent capability]: [Evidence and examples from multiple projects]
+2. [Second most valuable]: [Cross-project evidence and examples]
 
 ### Common Problem-Solving Approaches
-1. [Approach 1]: [Projects where used effectively]
-2. [Approach 2]: [Projects where used effectively]
+[Patterns that emerged across multiple projects]
+1. [Approach 1]: [Projects where this was used effectively]
+2. [Approach 2]: [Projects where this was used effectively]
 
 ## Quantified Impact
 ### Time Savings
-- **Repository Setup:** X hours → Y minutes (Z% reduction)
-- **Debugging:** X hours → Y minutes (Z% reduction)
-- **Documentation:** X hours → Y minutes (Z% reduction)
+[Aggregate estimates across all project types]
+- **Development Setup:** [Total estimated savings]
+- **Code Generation/Refactoring:** [Total estimated savings]
+- **Debugging and Problem-Solving:** [Total estimated savings]
+- **Documentation and Analysis:** [Total estimated savings]
 
 ### Quality Improvements
-- [Improvement 1]: [Evidence]
-- [Improvement 2]: [Evidence]
+[Evidence-based improvements across projects]
+- [Improvement type 1]: [Examples from multiple projects]
+- [Improvement type 2]: [Examples from multiple projects]
 
 ### Professional Development
-- [Skill 1]: [How developed through Claude Code usage]
-- [Skill 2]: [How developed through Claude Code usage]
+[Skills and capabilities developed through Claude Code usage]
+- [Skill area 1]: [How developed across projects]
+- [Skill area 2]: [How developed across projects]
 
 ## Technology Domains
-### Web Development
-[Summary of web dev projects and outcomes]
+[Adaptive sections based on the types of projects discovered]
 
-### Data Science & ML
-[Summary of ML/data projects and outcomes]
+### [Domain 1 - e.g., Web Development]
+[Summary of projects and outcomes in this domain]
 
-### DevOps & Automation  
+### [Domain 2 - e.g., Data Science & ML]
+[Summary of projects and outcomes in this domain]
+
+### [Domain 3 - e.g., DevOps & Automation]
 [Summary of infrastructure/automation projects]
 
-### Creative & Experimental
-[Summary of sandbox/creative projects]
+### [Additional domains as discovered]
+[Summary of other project types found]
 
 ## Recommendations for Future Use
-1. [Recommendation 1]
-2. [Recommendation 2]
-3. [Recommendation 3]
+[Based on patterns observed across all projects]
+1. [Data-driven recommendation based on most successful patterns]
+2. [Recommendation for improvement areas identified]
+3. [Recommendation for new use cases based on portfolio gaps]
+
+## Portfolio Insights
+### Most Successful Project Types
+[Analysis of which types of projects had the highest success rates]
+
+### Tool Effectiveness Rankings
+[Ranking of Claude Code tools by impact and frequency of successful use]
+
+### Workflow Integration Patterns
+[How Claude Code best integrates into different development workflows]
 
 ## Conclusion
-[2-3 paragraph reflection on Claude Code's role in professional development]
+[Reflective analysis on Claude Code's role across the entire project portfolio]
 ```
 
-### 5. Optional: LinkedIn Content Generation
+### 5. Adaptive Content Generation
 
-If requested, extract key accomplishments suitable for LinkedIn posts:
-- Technical achievements worth sharing
-- Problem-solving examples
-- Professional growth highlights
-- Industry insights gained
+Based on the discovered summaries, optionally generate:
+- **Professional Portfolio Content:** Key accomplishments suitable for resumes or portfolios
+- **Technical Blog Content:** Insights and lessons learned worth sharing
+- **Process Documentation:** Successful workflow patterns for future reference
+- **Skills Assessment:** Technical capabilities demonstrated through projects
+
+### 6. Quality Assurance
+
+Ensure comprehensive coverage:
+- Verify all discovered summary files were analyzed
+- Check that quantitative estimates are conservative and evidence-based
+- Validate that patterns are supported by multiple project examples
+- Confirm recommendations align with observed success patterns
 
 ---
 
 $ARGUMENTS
 
-Begin with: "I'll analyze your conversation summaries to create a comprehensive impact report. Let me read through all the summary files first."
+Begin with: "I'll analyze your conversation summaries to create a comprehensive impact report. Let me first discover and read through all available summary files."

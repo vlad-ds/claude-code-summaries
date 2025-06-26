@@ -9,9 +9,10 @@ summaries focusing on what was accomplished and how Claude Code helped.
 import json
 import os
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 import re
 from datetime import datetime
+import sys
 
 class ConversationSummarizer:
     def __init__(self, projects_dir: str, output_dir: str):
@@ -266,11 +267,89 @@ class ConversationSummarizer:
         
         return summaries
 
-def main():
-    projects_dir = "/Users/vladgheorghe/.claude/projects"
-    output_dir = "/Users/vladgheorghe/code/claude-code-summaries/summaries"
+def find_claude_projects_dir() -> Optional[Path]:
+    """Find the Claude projects directory automatically."""
+    # Common locations for Claude projects directory
+    possible_locations = [
+        Path.home() / ".claude" / "projects",
+        Path.home() / ".config" / "claude" / "projects",
+        Path.home() / "Library" / "Application Support" / "Claude" / "projects",  # macOS
+        Path.home() / "AppData" / "Roaming" / "Claude" / "projects",  # Windows
+        Path.home() / ".local" / "share" / "claude" / "projects",  # Linux
+    ]
     
-    summarizer = ConversationSummarizer(projects_dir, output_dir)
+    for location in possible_locations:
+        if location.exists() and location.is_dir():
+            # Check if it contains .jsonl files in subdirectories
+            jsonl_files = list(location.rglob("*.jsonl"))
+            if jsonl_files:
+                return location
+    
+    return None
+
+def get_output_dir() -> Path:
+    """Get the output directory for summaries."""
+    # Use current directory + summaries folder
+    current_dir = Path.cwd()
+    return current_dir / "summaries"
+
+def main():
+    print("Claude Code Conversation Analyzer")
+    print("=" * 40)
+    
+    # Try to find Claude projects directory automatically
+    projects_dir = find_claude_projects_dir()
+    
+    if projects_dir is None:
+        print("❌ Could not automatically find Claude projects directory.")
+        print("\nCommon locations:")
+        print("  - ~/.claude/projects")
+        print("  - ~/.config/claude/projects")
+        print("  - ~/Library/Application Support/Claude/projects (macOS)")
+        print("  - ~/AppData/Roaming/Claude/projects (Windows)")
+        
+        # Ask user to provide the path
+        while True:
+            user_input = input("\nPlease enter your Claude projects directory path: ").strip()
+            if not user_input:
+                print("❌ Path cannot be empty.")
+                continue
+            
+            user_path = Path(user_input).expanduser()
+            if user_path.exists() and user_path.is_dir():
+                # Check if it contains .jsonl files
+                jsonl_files = list(user_path.rglob("*.jsonl"))
+                if jsonl_files:
+                    projects_dir = user_path
+                    break
+                else:
+                    print(f"❌ No .jsonl conversation files found in {user_path}")
+            else:
+                print(f"❌ Directory {user_path} does not exist or is not a directory.")
+    
+    output_dir = get_output_dir()
+    
+    print(f"✅ Claude projects directory: {projects_dir}")
+    print(f"✅ Output directory: {output_dir}")
+    
+    # Count total conversations
+    total_conversations = len(list(projects_dir.rglob("*.jsonl")))
+    total_projects = len([d for d in projects_dir.iterdir() if d.is_dir()])
+    
+    print(f"📊 Found {total_conversations} conversations across {total_projects} projects")
+    
+    if total_conversations == 0:
+        print("❌ No conversation files found. Make sure you have Claude Code conversation history.")
+        sys.exit(1)
+    
+    # Confirm before processing
+    response = input(f"\nProceed with analyzing {total_conversations} conversations? (y/n): ").lower().strip()
+    if response not in ['y', 'yes']:
+        print("Analysis cancelled.")
+        sys.exit(0)
+    
+    print("\n🚀 Starting analysis...")
+    summarizer = ConversationSummarizer(str(projects_dir), str(output_dir))
     summaries = summarizer.process_all_conversations()
     
     # Print a brief report
